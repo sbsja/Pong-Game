@@ -56,6 +56,19 @@ def Knapp_tryck(spelare_hastighet, motståndare_hastighet):
             
     return spelare_hastighet, motståndare_hastighet
 
+def Rita_fönster():
+    #RITAR IN FIGURERNA
+    FÖNSTER.fill("Grey12")
+    pygame.draw.rect(FÖNSTER, WHITE, spelare)
+    pygame.draw.rect(FÖNSTER, WHITE, motståndare)
+    pygame.draw.ellipse(FÖNSTER, WHITE, boll)
+    pygame.draw.aaline(FÖNSTER, WHITE, (WIDTH/2, 0), (WIDTH/2, HEIGHT))
+            
+    pygame.display.flip()
+    klocka.tick(60)
+
+
+
 pygame.init()
 klocka = pygame.time.Clock()
 
@@ -70,8 +83,8 @@ motståndare = pygame.Rect(20, HEIGHT/2 -70, 10, 140)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
-boll_dx = 7
-boll_dy = 7
+boll_dx = 10
+boll_dy = 10
 spelare_hastighet = 0
 motståndare_hastighet = 0
 
@@ -81,21 +94,9 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        
         spelare_hastighet, motståndare_hastighet = Knapp_tryck(spelare_hastighet, motståndare_hastighet)        
         
     boll_dx, boll_dy = boll_rörelse(boll_dx, boll_dy)
     spelare_rörelse()
     motståndare_rörelse()
-    
-    
-    #RITAR IN FIGURERNA
-    FÖNSTER.fill("Grey12")
-    pygame.draw.rect(FÖNSTER, WHITE, spelare)
-    pygame.draw.rect(FÖNSTER, WHITE, motståndare)
-    pygame.draw.ellipse(FÖNSTER, WHITE, boll)
-    pygame.draw.aaline(FÖNSTER, WHITE, (WIDTH/2, 0), (WIDTH/2, HEIGHT))
-    #pygame.draw.aaline(FÖNSTER, WHITE, (0, HEIGHT/2), (WIDTH, HEIGHT/2))
-            
-    pygame.display.flip()
-    klocka.tick(60)
+    Rita_fönster()
