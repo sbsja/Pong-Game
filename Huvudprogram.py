@@ -1,21 +1,29 @@
 import pygame, sys, random
 
-def boll_rörelse(boll_dx, boll_dy):
+def boll_rörelse(boll_dx, boll_dy, spelare_poäng, motståndare_poäng):
     # Rörelse för karaktärerna
     boll.x += boll_dx
     boll.y += boll_dy
     
     if boll.top <= 0 or boll.bottom >= HEIGHT:
-        boll_dy *= -1 
-    if boll.left <= 0 or boll.right >= WIDTH:
+        boll_dy *= -1
+         
+    if boll.left <= 0:
         boll.center = (WIDTH/2, HEIGHT/2)
         boll_dx *= random.choice((1, -1))
         boll_dy *= random.choice((1, -1))
+        spelare_poäng += 1
+         
+    if boll.right >= WIDTH:
+        boll.center = (WIDTH/2, HEIGHT/2)
+        boll_dx *= random.choice((1, -1))
+        boll_dy *= random.choice((1, -1))
+        motståndare_poäng += 1
         
     if boll.colliderect(spelare) or boll.colliderect(motståndare):
         boll_dx *= -1
         
-    return boll_dx, boll_dy
+    return boll_dx, boll_dy, spelare_poäng, motståndare_poäng
 
 def spelare_rörelse():
     spelare.y += spelare_hastighet
@@ -63,7 +71,12 @@ def Rita_fönster():
     pygame.draw.rect(FÖNSTER, WHITE, motståndare)
     pygame.draw.ellipse(FÖNSTER, WHITE, boll)
     pygame.draw.aaline(FÖNSTER, WHITE, (WIDTH/2, 0), (WIDTH/2, HEIGHT))
-            
+    
+    spelare_text = spel_font.render(str(spelare_poäng), False, WHITE)
+    motståndare_text = spel_font.render(str(motståndare_poäng), False, WHITE)
+    FÖNSTER.blit(spelare_text,(660, 360))
+    FÖNSTER.blit(motståndare_text, (600, 360))
+    
     pygame.display.flip()
     klocka.tick(60)
 
@@ -87,6 +100,10 @@ boll_dx = 10
 boll_dy = 10
 spelare_hastighet = 0
 motståndare_hastighet = 0
+spelare_poäng = 0
+motståndare_poäng = 0
+
+spel_font = pygame.font.Font("freesansbold.ttf", 32)
 
 while True:
     
@@ -96,7 +113,7 @@ while True:
             sys.exit()
         spelare_hastighet, motståndare_hastighet = Knapp_tryck(spelare_hastighet, motståndare_hastighet)        
         
-    boll_dx, boll_dy = boll_rörelse(boll_dx, boll_dy)
+    boll_dx, boll_dy, spelare_poäng, motståndare_poäng = boll_rörelse(boll_dx, boll_dy, spelare_poäng, motståndare_poäng)
     spelare_rörelse()
     motståndare_rörelse()
     Rita_fönster()
